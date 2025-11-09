@@ -1,0 +1,24 @@
+name: Post welcome comment
+
+# Se activa cuando se abre un Pull Request
+on:
+  pull_request:
+    types: [opened]
+
+# Define los permisos necesarios para el job
+permissions:
+  pull-requests: write
+
+# Define los trabajos (jobs) a ejecutar
+jobs:
+  welcome:
+    name: Post welcome comment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post welcome comment
+        run: gh pr comment "$PR_URL" --body "Welcome to the repository!"
+        env:
+          # El token es necesario para que el script pueda publicar en el PR
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Obtenemos la URL del PR desde el evento que activó el workflow
+          PR_URL: ${{ github.event.pull_request.html_url }}
